@@ -11,8 +11,7 @@ public interface ExternalUserService
 {
     Page<ExternalUserDto> findAll(Pageable pageable);
     Page<ExternalUserDto> findByProvider(ExternalProvider externalProvider,Pageable pageable);
-    ExternalUserDto findById(Long id);
-    ExternalUserDto findByExternalID(Long externalID);
+    ExternalUserDto find(Long id,Long externalID);
     ExternalUserDto insertUser(ExternalUserDto externalUserDto);
     ExternalUserDto updateUser(Long id,ExternalUserDto externalUserDto);
     void delete(Long id);

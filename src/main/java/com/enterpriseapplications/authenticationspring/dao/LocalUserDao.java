@@ -13,4 +13,6 @@ public interface LocalUserDao extends JpaRepository<LocalUser,Long>
 {
     @Query("select u from LocalUser u where u.username = :requiredUsername")
     Optional<LocalUser> findUserByUsername(@Param("username") String username);
+    @Query("select u from LocalUser u where u.id = :requiredID and u.username = :requiredUsername")
+    Optional<LocalUser> findUser(@Param("requiredID") Long requiredID,@Param("requiredUsername") String username);
 }

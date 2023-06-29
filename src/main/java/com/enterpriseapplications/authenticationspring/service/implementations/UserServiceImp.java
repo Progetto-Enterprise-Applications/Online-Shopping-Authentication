@@ -5,6 +5,7 @@ import com.enterpriseapplications.authenticationspring.dto.UserDto;
 import com.enterpriseapplications.authenticationspring.entities.User;
 import com.enterpriseapplications.authenticationspring.entities.enums.UserType;
 import com.enterpriseapplications.authenticationspring.service.interfaces.UserService;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -51,6 +52,7 @@ public class UserServiceImp implements UserService
     }
 
     @Override
+    @Transactional
     public UserDto insertUser(UserDto userDto) {
         User user = this.modelMapper.map(userDto,User.class);
         this.userDao.save(user);
@@ -58,6 +60,7 @@ public class UserServiceImp implements UserService
     }
 
     @Override
+    @Transactional
     public UserDto updateUser(Long id, UserDto userDto) {
         Optional<User> userOptional = this.userDao.findById(id);
         return userOptional.map(user -> {
@@ -67,6 +70,7 @@ public class UserServiceImp implements UserService
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         this.userDao.findById(id).orElseThrow();
         this.userDao.deleteById(id);

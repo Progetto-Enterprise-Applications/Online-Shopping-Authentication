@@ -13,8 +13,5 @@ public class AuthenticationSpringApplication {
     public static void main(String[] args) {
         SpringApplication.run(AuthenticationSpringApplication.class, args);
     }
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
 }
+

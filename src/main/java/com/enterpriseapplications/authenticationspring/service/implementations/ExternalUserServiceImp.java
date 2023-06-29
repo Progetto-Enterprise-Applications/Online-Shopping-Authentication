@@ -1,10 +1,12 @@
 package com.enterpriseapplications.authenticationspring.service.implementations;
 
 import com.enterpriseapplications.authenticationspring.dao.ExternalUserDao;
+import com.enterpriseapplications.authenticationspring.dao.UserDao;
 import com.enterpriseapplications.authenticationspring.dto.ExternalUserDto;
 import com.enterpriseapplications.authenticationspring.entities.ExternalUser;
 import com.enterpriseapplications.authenticationspring.entities.enums.ExternalProvider;
 import com.enterpriseapplications.authenticationspring.service.interfaces.ExternalUserService;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,10 +21,12 @@ import java.util.Optional;
 public class ExternalUserServiceImp implements ExternalUserService  {
 
     private final ExternalUserDao externalUserDao;
+    private final UserDao userDao;
     private final ModelMapper modelMapper;
 
-    public ExternalUserServiceImp(ExternalUserDao externalUserDao,ModelMapper modelMapper) {
+    public ExternalUserServiceImp(ExternalUserDao externalUserDao,UserDao userDao,ModelMapper modelMapper) {
         this.externalUserDao = externalUserDao;
+        this.userDao = userDao;
         this.modelMapper = modelMapper;
     }
 
@@ -39,17 +43,19 @@ public class ExternalUserServiceImp implements ExternalUserService  {
     }
 
     @Override
-    public ExternalUserDto findById(Long id) {
-        Optional<ExternalUser> externalUserOptional = this.externalUserDao.findById(id);
+    public ExternalUserDto find(Long id, Long externalID) {
+        Optional<ExternalUser> externalUserOptional = Optional.empty();
+        if(id != null && externalID != null)
+            externalUserOptional = this.externalUserDao.find(id,externalID);
+        else if(externalID != null)
+            externalUserOptional = this.externalUserDao.findByExternalID(externalID);
+        else if(id != null)
+            externalUserOptional = this.externalUserDao.findById(id);
         return externalUserOptional.map(externalUser -> this.modelMapper.map(externalUser,ExternalUserDto.class)).orElseThrow();
     }
 
     @Override
-    public ExternalUserDto findByExternalID(Long externalID) {
-        Optional<ExternalUser> externalUserOptional = this.externalUserDao.findByExternalID(externalID);
-        return externalUserOptional.map(externalUser -> this.modelMapper.map(externalUser,ExternalUserDto.class)).orElseThrow();
-    }
-    @Override
+    @Transactional
     public ExternalUserDto insertUser(ExternalUserDto externalUserDto) {
         ExternalUser externalUser = this.modelMapper.map(externalUserDto,ExternalUser.class);
         this.externalUserDao.save(externalUser);
@@ -57,6 +63,7 @@ public class ExternalUserServiceImp implements ExternalUserService  {
     }
 
     @Override
+    @Transactional
     public ExternalUserDto updateUser(Long id, ExternalUserDto externalUserDto) {
         Optional<ExternalUser> externalUserOptional = this.externalUserDao.findById(id);
         return externalUserOptional.map(externalUser -> {
@@ -66,6 +73,7 @@ public class ExternalUserServiceImp implements ExternalUserService  {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         this.externalUserDao.findById(id).orElseThrow();
         this.externalUserDao.deleteById(id);
