@@ -1,5 +1,6 @@
 package com.enterpriseapplications.authenticationspring;
 
+import com.enterpriseapplications.authenticationspring.service.LoggedUserDetailsService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -53,6 +54,7 @@ public class SecurityConfig {
 
 
     private final CustomOidcAuthenticationHandler customOidcAuthenticationHandler;
+    private final LoggedUserDetailsService loggedUserDetailsService;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -113,17 +115,9 @@ public class SecurityConfig {
         return http.cors(Customizer.withDefaults()).build();
     }
 
-    @Bean // <3>
+    @Bean
     public UserDetailsService userDetailsService() {
-        // @formatter:off
-        UserDetails userDetails = User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("password")
-                .roles("USER")
-                .build();
-        // @formatter:on
-
-        return new InMemoryUserDetailsManager(userDetails);
+        return loggedUserDetailsService;
     }
 
     @Bean

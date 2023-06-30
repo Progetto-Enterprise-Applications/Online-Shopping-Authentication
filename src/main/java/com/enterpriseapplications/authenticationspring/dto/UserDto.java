@@ -26,5 +26,15 @@ public class UserDto
 
     @NotNull
     @NotBlank
+    private String roles;
+
+    @NotNull
+    @NotBlank
     private UserType userType;
+
+    @NotNull
+    private Boolean enabled;
+
+    @NotNull
+    private Boolean notLocked;
 }

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -36,6 +37,14 @@ public class User
     @Enumerated(value = EnumType.STRING)
     @Column(name = "TYPE",unique = false,nullable = false)
     private UserType userType;
+
+    @Column(name = "ENABLED",unique = false,nullable = false)
+    @ColumnDefault("true")
+    private Boolean enabled;
+
+    @Column(name = "NOT_LOCKED",unique = false,nullable = false)
+    @ColumnDefault("false")
+    private Boolean notLocked;
 
     @CreatedDate
     @Column(name = "CREATED_DATE",unique = false,updatable = false)
