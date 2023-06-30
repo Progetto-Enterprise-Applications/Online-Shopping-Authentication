@@ -1,5 +1,6 @@
 package com.enterpriseapplications.authenticationspring;
 
+import com.enterpriseapplications.authenticationspring.service.LoggedUserDetailsService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -53,6 +54,7 @@ public class SecurityConfig {
 
 
     private final CustomOidcAuthenticationHandler customOidcAuthenticationHandler;
+    private final LoggedUserDetailsService loggedUserDetailsService;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -98,7 +100,10 @@ public class SecurityConfig {
         // @formatter:off
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated().
+                        requestMatchers("/localUsers").hasRole("ADMIN")
+                        .requestMatchers("/users").hasRole("ADMIN")
+                        .requestMatchers("/externalUsers").hasRole("ADMIN")
                 ).oauth2Login(Customizer.withDefaults()).oauth2Login(oauth2 -> {
                     oauth2.successHandler(customOidcAuthenticationHandler);
                     oauth2.failureHandler(customOidcAuthenticationHandler);
@@ -113,17 +118,9 @@ public class SecurityConfig {
         return http.cors(Customizer.withDefaults()).build();
     }
 
-    @Bean // <3>
+    @Bean
     public UserDetailsService userDetailsService() {
-        // @formatter:off
-        UserDetails userDetails = User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("password")
-                .roles("USER")
-                .build();
-        // @formatter:on
-
-        return new InMemoryUserDetailsManager(userDetails);
+        return loggedUserDetailsService;
     }
 
     @Bean
