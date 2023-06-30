@@ -100,7 +100,10 @@ public class SecurityConfig {
         // @formatter:off
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated().
+                        requestMatchers("/localUsers").hasRole("ADMIN")
+                        .requestMatchers("/users").hasRole("ADMIN")
+                        .requestMatchers("/externalUsers").hasRole("ADMIN")
                 ).oauth2Login(Customizer.withDefaults()).oauth2Login(oauth2 -> {
                     oauth2.successHandler(customOidcAuthenticationHandler);
                     oauth2.failureHandler(customOidcAuthenticationHandler);
