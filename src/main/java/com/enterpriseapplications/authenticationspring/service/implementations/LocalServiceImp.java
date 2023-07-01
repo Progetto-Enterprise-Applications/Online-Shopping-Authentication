@@ -3,33 +3,36 @@ package com.enterpriseapplications.authenticationspring.service.implementations;
 import com.enterpriseapplications.authenticationspring.dao.LocalUserDao;
 import com.enterpriseapplications.authenticationspring.dao.UserDao;
 import com.enterpriseapplications.authenticationspring.dto.LocalUserDto;
+import com.enterpriseapplications.authenticationspring.dto.RegisterUserDto;
 import com.enterpriseapplications.authenticationspring.dto.UserDto;
 import com.enterpriseapplications.authenticationspring.entities.LocalUser;
-import com.enterpriseapplications.authenticationspring.entities.User;
+import com.enterpriseapplications.authenticationspring.entities.enums.UserType;
 import com.enterpriseapplications.authenticationspring.service.interfaces.LocalUserService;
 import jakarta.transaction.Transactional;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Data
 public class LocalServiceImp implements LocalUserService {
 
     private final LocalUserDao localUserDao;
     private final UserDao userDao;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public LocalServiceImp(LocalUserDao localUserDao,UserDao userDao,ModelMapper modelMapper) {
-        this.localUserDao = localUserDao;
-        this.userDao = userDao;
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     public Page<LocalUserDto> findAll(Pageable pageable) {
@@ -51,10 +54,14 @@ public class LocalServiceImp implements LocalUserService {
 
     @Override
     @Transactional
-    public LocalUserDto insertUser(LocalUserDto localUserDto) {
+    public LocalUserDto insertUser(RegisterUserDto localUserDto) {
         LocalUser localUser = this.modelMapper.map(localUserDto,LocalUser.class);
-        this.localUserDao.save(localUser);
-        return this.modelMapper.map(localUser,LocalUserDto.class);
+        localUser.setUserType(UserType.LOCAL);
+        localUser.setEnabled(true);
+        localUser.setRoles("BASIC");
+        localUser.setNotLocked(true);
+        localUser.setPassword(this.passwordEncoder.encode(localUserDto.getPassword()));
+        return this.modelMapper.map(this.localUserDao.save(localUser),LocalUserDto.class);
     }
 
     @Override

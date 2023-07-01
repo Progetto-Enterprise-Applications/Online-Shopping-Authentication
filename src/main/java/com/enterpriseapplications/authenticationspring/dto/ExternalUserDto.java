@@ -17,10 +17,8 @@ import lombok.NoArgsConstructor;
 public class ExternalUserDto extends UserDto
 {
     @NotNull
-    @PositiveOrZero
-    private Long externalID;
+    private String externalID;
 
     @NotNull
-    @NotBlank
     private ExternalProvider externalProvider;
 }

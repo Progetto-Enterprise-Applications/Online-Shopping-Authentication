@@ -24,33 +24,33 @@ public class User
 {
     @Id
     @Column(name = "ID",unique = true)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Column(name = "EMAIL",unique = true,nullable = false)
     @Email
     private String email;
 
-    @Column(name = "ROLES",unique = false,nullable = false)
+    @Column(name = "ROLES", nullable = false)
     private String roles;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "TYPE",unique = false,nullable = false)
+    @Column(name = "TYPE", nullable = false)
     private UserType userType;
 
-    @Column(name = "ENABLED",unique = false,nullable = false)
+    @Column(name = "ENABLED", nullable = false)
     @ColumnDefault("true")
     private Boolean enabled;
 
-    @Column(name = "NOT_LOCKED",unique = false,nullable = false)
+    @Column(name = "NOT_LOCKED", nullable = false)
     @ColumnDefault("false")
     private Boolean notLocked;
 
     @CreatedDate
-    @Column(name = "CREATED_DATE",unique = false,updatable = false)
+    @Column(name = "CREATED_DATE", updatable = false)
     private LocalDate createdDate;
 
     @LastModifiedDate
-    @Column(name = "LAST_MODIFIED_DATE",unique = false,updatable = true)
+    @Column(name = "LAST_MODIFIED_DATE")
     private LocalDate lastModifiedDate;
 }

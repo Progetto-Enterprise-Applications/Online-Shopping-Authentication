@@ -34,7 +34,7 @@ public class ExternalUserController {
     }
 
     @GetMapping
-    public ResponseEntity<ExternalUserDto> find(@RequestParam(value = "id",required = false) Long id,@RequestParam(value = "externalID",required = false) Long externalID) {
+    public ResponseEntity<ExternalUserDto> find(@RequestParam(value = "id",required = false) Long id,@RequestParam(value = "externalID",required = false) String externalID) {
         return ResponseEntity.ok(this.externalUserService.find(id,externalID));
     }
 

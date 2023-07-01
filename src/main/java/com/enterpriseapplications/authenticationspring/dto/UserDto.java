@@ -16,8 +16,7 @@ import lombok.NoArgsConstructor;
 public class UserDto
 {
     @NotNull
-    @PositiveOrZero
-    private Long id;
+    private String id;
 
     @NotNull
     @NotBlank

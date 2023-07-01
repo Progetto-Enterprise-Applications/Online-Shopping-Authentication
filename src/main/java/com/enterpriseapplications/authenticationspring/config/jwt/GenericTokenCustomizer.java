@@ -1,25 +1,40 @@
-package com.enterpriseapplications.authenticationspring;
+package com.enterpriseapplications.authenticationspring.config.jwt;
 
+import com.enterpriseapplications.authenticationspring.config.auth.ILoggedUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
+import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-public class FederatedIdentityIdTokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> {
+@Component
+public class GenericTokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> {
 
     private static final Set<String> ID_TOKEN_CLAIMS = Set.of(IdTokenClaimNames.ISS, IdTokenClaimNames.SUB, IdTokenClaimNames.AUD, IdTokenClaimNames.EXP, IdTokenClaimNames.IAT, IdTokenClaimNames.AUTH_TIME, IdTokenClaimNames.NONCE, IdTokenClaimNames.ACR, IdTokenClaimNames.AMR, IdTokenClaimNames.AZP, IdTokenClaimNames.AT_HASH, IdTokenClaimNames.C_HASH);
 
     @Override
     public void customize(JwtEncodingContext context) {
 
+        if(context.getPrincipal().getPrincipal() instanceof ILoggedUser loggedUser)
+        {
+            context.getClaims().claim("sub", loggedUser.getId());
+            context.getClaims().claim("email", loggedUser.getEmail());
+            context.getClaims().claim("username", loggedUser.getName());
+            context.getClaims().claim("roles", loggedUser.getRoles());
+
+        }
 
 
+
+        /*
         if (OidcParameterNames.ID_TOKEN.equals(context.getTokenType().getValue())) {
             Map<String, Object> thirdPartyClaims = extractClaims(context.getPrincipal());
             context.getClaims().claims(existingClaims -> {
@@ -34,16 +49,16 @@ public class FederatedIdentityIdTokenCustomizer implements OAuth2TokenCustomizer
             });
 
         }
+
+         */
     }
 
     private Map<String, Object> extractClaims(Authentication principal) {
         Map<String, Object> claims;
-        if (principal.getPrincipal() instanceof OidcUser) {
-            OidcUser oidcUser = (OidcUser) principal.getPrincipal();
+        if (principal.getPrincipal() instanceof OidcUser oidcUser) {
             OidcIdToken idToken = oidcUser.getIdToken();
             claims = idToken.getClaims();
-        } else if (principal.getPrincipal() instanceof OAuth2User) {
-            OAuth2User oauth2User = (OAuth2User) principal.getPrincipal();
+        } else if (principal.getPrincipal() instanceof OAuth2User oauth2User) {
             claims = oauth2User.getAttributes();
         } else {
             claims = Collections.emptyMap();

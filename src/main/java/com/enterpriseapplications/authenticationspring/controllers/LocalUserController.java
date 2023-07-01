@@ -2,6 +2,7 @@ package com.enterpriseapplications.authenticationspring.controllers;
 
 import com.enterpriseapplications.authenticationspring.dto.LocalUserDto;
 import com.enterpriseapplications.authenticationspring.dto.PaginationResponse;
+import com.enterpriseapplications.authenticationspring.dto.RegisterUserDto;
 import com.enterpriseapplications.authenticationspring.dto.UserDto;
 import com.enterpriseapplications.authenticationspring.service.interfaces.LocalUserService;
 import jakarta.validation.Valid;
@@ -31,8 +32,8 @@ public class LocalUserController {
         return ResponseEntity.ok(this.localUserService.find(id,username));
     }
 
-    @PostMapping
-    public ResponseEntity<LocalUserDto> insertUser(@RequestBody @Valid LocalUserDto localUserDto) {
+    @PostMapping("/register")
+    public ResponseEntity<LocalUserDto> insertUser(@RequestBody @Valid RegisterUserDto localUserDto) {
         return ResponseEntity.ok(this.localUserService.insertUser(localUserDto));
     }
 
