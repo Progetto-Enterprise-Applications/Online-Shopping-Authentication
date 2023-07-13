@@ -24,8 +24,8 @@ public class User
 {
     @Id
     @Column(name = "ID",unique = true)
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idGenerator")
+    private Long id;
 
     @Column(name = "EMAIL",unique = true,nullable = false)
     @Email
