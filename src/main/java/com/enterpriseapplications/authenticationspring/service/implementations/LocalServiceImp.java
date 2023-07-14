@@ -4,34 +4,46 @@ import com.enterpriseapplications.authenticationspring.dao.LocalUserDao;
 import com.enterpriseapplications.authenticationspring.dao.UserDao;
 import com.enterpriseapplications.authenticationspring.dto.LocalUserDto;
 import com.enterpriseapplications.authenticationspring.dto.RegisterUserDto;
-import com.enterpriseapplications.authenticationspring.dto.UserDto;
 import com.enterpriseapplications.authenticationspring.entities.LocalUser;
 import com.enterpriseapplications.authenticationspring.entities.enums.UserType;
 import com.enterpriseapplications.authenticationspring.service.interfaces.LocalUserService;
 import jakarta.transaction.Transactional;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Data
 public class LocalServiceImp implements LocalUserService {
 
     private final LocalUserDao localUserDao;
     private final UserDao userDao;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+
+    public LocalServiceImp(LocalUserDao localUserDao, UserDao userDao, ModelMapper modelMapper, PasswordEncoder passwordEncoder)
+    {
+        this.localUserDao = localUserDao;
+        this.userDao = userDao;
+        this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
+
+        LocalUser localUser = new LocalUser();
+        localUser.setEmail("pippo@libero.it");
+        localUser.setUsername("admin");
+        localUser.setUserType(UserType.LOCAL);
+        localUser.setEnabled(true);
+        localUser.setRoles("ADMIN");
+        localUser.setNotLocked(true);
+        localUser.setPassword(this.passwordEncoder.encode("admin"));
+
+        this.localUserDao.save(localUser);
+    }
 
 
     @Override
