@@ -1,12 +1,10 @@
 package com.enterpriseapplications.authenticationspring;
 
-import com.enterpriseapplications.authenticationspring.config.jwt.GenericTokenCustomizer;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -28,8 +26,6 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
-import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
-import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -45,11 +41,9 @@ import java.util.UUID;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
 public class SecurityConfig {
 
     private final String[] publicPatterns = new String[]{"/localUsers/register","/swagger-ui/**","/v3/api-docs/**"};
-    //private final CustomOidcAuthenticationHandler customOidcAuthenticationHandler;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -89,46 +83,8 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
             throws Exception {
-        http.oauth2Login(Customizer.withDefaults()).oauth2Login((config) -> {
-
-            /*
-            config.withObjectPostProcessor(
-                        new ObjectPostProcessor<OAuth2LoginAuthenticationFilter>() {
-                            @Override
-                            public <O extends OAuth2LoginAuthenticationFilter> O postProcess(O object) {
-                                object.setAuthenticationResultConverter(source -> {
-
-                                    OAuth2AuthenticationToken e = new OAuth2AuthenticationToken(source.getPrincipal(),source.getAuthorities(),source.getName());
-                                    e.setDetails(new ILoggedUser() {
-                                        @Override
-                                        public String getId() {
-                                            return null;
-                                        }
-
-                                        @Override
-                                        public String getName() {
-                                            return "eeeeeee";
-                                        }
-
-                                        @Override
-                                        public String getEmail() {
-                                            return null;
-                                        }
-                                    });
-
-                                    return e;
-                                });
-                                return object;
-                            }
-                        });
-
-             */
-                })
-                .formLogin(Customizer.withDefaults()).csrf((csrf) -> {
-                    csrf.ignoringRequestMatchers(publicPatterns);
-                });
-
-
+        http.oauth2Login(Customizer.withDefaults())
+                .formLogin(Customizer.withDefaults()).csrf((csrf) -> csrf.ignoringRequestMatchers(publicPatterns));
 
         return http.cors(Customizer.withDefaults()).build();
     }
