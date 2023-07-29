@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class RegisterUserDto {
+public class RegisterUser {
 
     @Email
     private String email;

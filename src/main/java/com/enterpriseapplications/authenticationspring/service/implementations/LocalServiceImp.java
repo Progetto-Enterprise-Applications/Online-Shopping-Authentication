@@ -3,7 +3,7 @@ package com.enterpriseapplications.authenticationspring.service.implementations;
 import com.enterpriseapplications.authenticationspring.dao.LocalUserDao;
 import com.enterpriseapplications.authenticationspring.dao.UserDao;
 import com.enterpriseapplications.authenticationspring.dto.LocalUserDto;
-import com.enterpriseapplications.authenticationspring.dto.RegisterUserDto;
+import com.enterpriseapplications.authenticationspring.dto.RegisterUser;
 import com.enterpriseapplications.authenticationspring.entities.LocalUser;
 import com.enterpriseapplications.authenticationspring.entities.enums.UserType;
 import com.enterpriseapplications.authenticationspring.service.interfaces.LocalUserService;
@@ -66,7 +66,7 @@ public class LocalServiceImp implements LocalUserService {
 
     @Override
     @Transactional
-    public LocalUserDto insertUser(RegisterUserDto localUserDto) {
+    public LocalUserDto insertUser(RegisterUser localUserDto) {
         LocalUser localUser = this.modelMapper.map(localUserDto,LocalUser.class);
         localUser.setUserType(UserType.LOCAL);
         localUser.setEnabled(true);
@@ -78,11 +78,13 @@ public class LocalServiceImp implements LocalUserService {
 
     @Override
     @Transactional
-    public LocalUserDto updateUser(Long id, LocalUserDto localUserDto) {
+    public LocalUserDto updateUser(Long id, RegisterUser localUserDto) {
+
+
         Optional<LocalUser> userOptional = this.localUserDao.findUserByUsername(localUserDto.getUsername());
         return userOptional.map(user -> {
             user.setUsername(localUserDto.getUsername());
-            user.setPassword(localUserDto.getPassword());
+            user.setPassword(this.passwordEncoder.encode(localUserDto.getPassword()));
             this.localUserDao.save(user);
             return this.modelMapper.map(user, LocalUserDto.class);
         }).orElseThrow();

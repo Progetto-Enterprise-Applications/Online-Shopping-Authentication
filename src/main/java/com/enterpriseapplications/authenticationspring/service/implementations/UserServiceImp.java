@@ -53,24 +53,6 @@ public class UserServiceImp implements UserService
 
     @Override
     @Transactional
-    public UserDto insertUser(UserDto userDto) {
-        User user = this.modelMapper.map(userDto,User.class);
-        this.userDao.save(user);
-        return this.modelMapper.map(user,UserDto.class);
-    }
-
-    @Override
-    @Transactional
-    public UserDto updateUser(Long id, UserDto userDto) {
-        Optional<User> userOptional = this.userDao.findById(id);
-        return userOptional.map(user -> {
-            user.setEmail(userDto.getEmail());
-            return this.modelMapper.map(user,UserDto.class);
-        }).orElseThrow();
-    }
-
-    @Override
-    @Transactional
     public void delete(Long id) {
         this.userDao.findById(id).orElseThrow();
         this.userDao.deleteById(id);

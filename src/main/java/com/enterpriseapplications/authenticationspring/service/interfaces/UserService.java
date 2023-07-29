@@ -11,7 +11,5 @@ public interface UserService
     Page<UserDto> findByType(UserType userType,Pageable pageable);
     Page<UserDto> findByRoles(String roles,Pageable pageable);
     UserDto findByEmail(String email);
-    UserDto insertUser(UserDto userDto);
-    UserDto updateUser(Long id,UserDto userDto);
     void delete(Long id);
 }
