@@ -4,9 +4,9 @@
     <title>Sign in</title>
 </head>
 <body>
-<div th:if="${param.invalidRegister}">
+<div th:if="${param.invalid}">
     Invalid Data.</div>
-<form th:action="@{/registerUser}" method="post">
+<form th:action="@{/signInUser}" method="post">
     <div>
         <input type="text" name="email" placeholder="email"/>
     </div>

@@ -20,27 +20,27 @@ public class LoginController  {
         return "login";
     }
 
-    @GetMapping("/registration")
+    @GetMapping("/signIn")
     public String registration(){
-        return "registration";
+        return "signin";
     }
 
-    @PostMapping("/registerUser")
+    @PostMapping("/signInUser")
     public String redirectPostToPost(@Valid RegisterUser registerUser, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors())
-            return "redirect:/registration?invalidRegister";
+            return "redirect:/signIn?invalid";
 
         try{
             this.userService.insertUser(registerUser);
         }
         catch (Exception exception)
         {
-            return "redirect:/registration?error";
+            return "redirect:/signIn?error";
         }
 
 
-        return "redirect:/login?createdAccount";
+        return "redirect:/login?signIn";
     }
 
 }
