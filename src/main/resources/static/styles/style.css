@@ -1,0 +1,17 @@
+.background
+{
+    background-image: linear-gradient(34deg, rgba(14,11,14,1) 0%, rgba(53,52,50,1) 100%);
+    background-attachment: fixed;
+}
+
+
+.button
+{
+    background-color: rgba(166,47,14); border-color: rgba(166,47,14)
+}
+
+
+.button:hover
+{
+    background-color: rgba(176,47,14); border-color: rgba(176,47,14)
+}
