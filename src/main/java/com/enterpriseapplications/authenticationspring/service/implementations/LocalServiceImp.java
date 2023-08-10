@@ -8,6 +8,7 @@ import com.enterpriseapplications.authenticationspring.entities.LocalUser;
 import com.enterpriseapplications.authenticationspring.entities.enums.UserType;
 import com.enterpriseapplications.authenticationspring.service.interfaces.LocalUserService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class LocalServiceImp implements LocalUserService {
 
     private final LocalUserDao localUserDao;
@@ -42,7 +44,15 @@ public class LocalServiceImp implements LocalUserService {
         localUser.setNotLocked(true);
         localUser.setPassword(this.passwordEncoder.encode("admin"));
 
-        this.localUserDao.save(localUser);
+        try
+        {
+
+            this.localUserDao.save(localUser);
+        }
+        catch (Exception exception)
+        {
+            log.info("Admin user already created");
+        }
     }
 
 

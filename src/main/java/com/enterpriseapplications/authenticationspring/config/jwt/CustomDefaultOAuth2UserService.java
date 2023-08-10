@@ -26,7 +26,7 @@ public class CustomDefaultOAuth2UserService extends OidcUserService {
         OidcUser oidcUser = super.loadUser(userRequest);
         ExternalUserDto externalUserDto = externalUserService.registerExternalUser(oidcUser);
         List<String> roles = Arrays.stream(externalUserDto.getRoles().split(",")).toList();
-        return new CustomOidcUser(oidcUser,externalUserDto.getEmail(),externalUserDto.getEmail(),String.valueOf(externalUserDto.getId()),roles);
+        return new CustomOidcUser(oidcUser,externalUserDto.getEmail(),externalUserDto.getUsername(),String.valueOf(externalUserDto.getId()),roles);
 
     }
 }

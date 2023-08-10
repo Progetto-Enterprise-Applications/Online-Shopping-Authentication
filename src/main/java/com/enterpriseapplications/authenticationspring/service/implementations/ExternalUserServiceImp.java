@@ -47,6 +47,7 @@ public class ExternalUserServiceImp implements ExternalUserService  {
         ExternalUser externalUser = this.externalUserDao.findByExternalID(subject).orElseGet(() -> {
             ExternalUser newUser = new ExternalUser();
             newUser.setExternalID(subject);
+            newUser.setUsername(oAuth2User.getAttribute("given_name"));
             newUser.setEmail(oAuth2User.getAttribute("email"));
             newUser.setExternalProvider(ExternalProvider.GOOGLE);
             newUser.setUserType(UserType.EXTERNAL);

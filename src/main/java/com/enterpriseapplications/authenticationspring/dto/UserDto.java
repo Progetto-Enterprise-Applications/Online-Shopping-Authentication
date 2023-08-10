@@ -20,6 +20,11 @@ public class UserDto
 
     @NotNull
     @NotBlank
+    private String username;
+
+
+    @NotNull
+    @NotBlank
     @Email
     private String email;
 

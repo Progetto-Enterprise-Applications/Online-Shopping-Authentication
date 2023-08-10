@@ -27,6 +27,9 @@ public class User
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idGenerator")
     private Long id;
 
+    @Column(name = "USERNAME",unique = true,nullable = false)
+    private String username;
+
     @Column(name = "EMAIL",unique = true,nullable = false)
     @Email
     private String email;

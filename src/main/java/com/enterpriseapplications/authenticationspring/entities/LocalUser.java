@@ -16,9 +16,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LocalUser extends User
 {
-    @Column(name = "USERNAME",unique = true,nullable = false)
-    private String username;
-
     @Column(name = "PASSWORD",unique = false,nullable = false)
     private String password;
 }
