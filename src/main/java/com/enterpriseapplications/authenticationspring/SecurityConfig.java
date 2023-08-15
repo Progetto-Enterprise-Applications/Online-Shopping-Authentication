@@ -126,9 +126,27 @@ public class SecurityConfig {
                         .build()
                 )
                 .build();
-        // @formatter:on
 
-        return new InMemoryRegisteredClientRepository(publicClient);
+        RegisteredClient mobileClient = RegisteredClient.withId(UUID.randomUUID().toString())
+                .clientId("mobile-client")
+                .clientSecret("$2a$10$viEl0l28onNkpbDSNaJa4OSWdZXccA2E0daR0fpKHx8skJkWcdobC")
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .redirectUri("clowing://test.ac")
+                .postLogoutRedirectUri("clowing://test.ac")
+                .tokenSettings(TokenSettings.builder().build())
+                .scope(OidcScopes.OPENID)
+                .tokenSettings(TokenSettings.builder()
+                        .reuseRefreshTokens(false
+                        ).build())
+                .clientSettings(ClientSettings.builder()
+                        .requireAuthorizationConsent(true)
+                        .requireProofKey(true)
+                        .build()
+                )
+                .build();
+
+        return new InMemoryRegisteredClientRepository(publicClient,mobileClient);
     }
 
     @Bean // <5>
