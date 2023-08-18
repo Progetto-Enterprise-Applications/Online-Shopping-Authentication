@@ -2,11 +2,15 @@ package com.enterpriseapplications.authenticationspring.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class RegisterUser {
 
     @Email
+    @NotBlank
     private String email;
 
     @NotNull

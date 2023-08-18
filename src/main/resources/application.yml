@@ -14,3 +14,15 @@ spring:
             client-id: 489620953466-203lok50ikrgmlm2pjon44gadar4ef84.apps.googleusercontent.com
             client-secret: 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
             scope: openid,profile,email
+
+
+  web:
+    resources:
+      static-locations: file:src/main/resources/static/
+      cache:
+        period: 0
+  thymeleaf: # Thymeleaf
+      cache: false
+      mode: HTML
+      encoding: UTF-8
+      prefix: file:src/main/resources/templates/
