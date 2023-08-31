@@ -6,6 +6,7 @@ import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,9 @@ public class GenericTokenCustomizer implements OAuth2TokenCustomizer<JwtEncoding
             context.getClaims().claim("email", loggedUser.getEmail());
             context.getClaims().claim("username", loggedUser.getName());
             context.getClaims().claim("roles", loggedUser.getRoles());
+
+            if(context.getTokenType().equals(OAuth2TokenType.ACCESS_TOKEN))
+                context.getClaims().claim("expires_in", context.getRegisteredClient().getTokenSettings().getAccessTokenTimeToLive().getSeconds());
         }
 
     }

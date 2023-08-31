@@ -27,7 +27,7 @@
                         <!-- Email input -->
                         <div class="form-outline mb-4">
                             <input th:classappend ="${#fields.hasErrors('email')} ? 'is-invalid'" type="email" name="email"  id="emailForm" class="form-control form-control-lg"
-                                   placeholder="Enter a valid email address" />
+                                   th:value="${registration.email}" placeholder="Enter a valid email address" />
                             <div class="p-1 mt-1" th:if="${#fields.hasErrors('email')}">
                                 <span class="invalid-feedback d-block mb-1" th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
                             </div>
@@ -36,7 +36,7 @@
                         <!-- Username input -->
                         <div class="form-outline mb-4">
                             <input th:classappend ="${#fields.hasErrors('username')} ? 'is-invalid'" type="username" name="username"  id="usernameForm" class="form-control form-control-lg"
-                                   placeholder="Enter a valid username" />
+                                   th:value="${registration.username}" placeholder="Enter a valid username" />
                             <div class="p-1 mt-1" th:if="${#fields.hasErrors('username')}">
                                 <span class="invalid-feedback d-block mb-1" th:each="err : ${#fields.errors('username')}" th:text="${err}"></span>
                             </div>
@@ -44,7 +44,7 @@
 
                         <!-- Password input -->
                         <div class="form-outline mb-3">
-                            <input th:classappend ="${#fields.hasErrors('password')} ? 'is-invalid'" type="password" name="password"  id="passwordForm" class="form-control form-control-lg" placeholder="Enter password" />
+                            <input th:value="${registration.password}" th:classappend ="${#fields.hasErrors('password')} ? 'is-invalid'" type="password" name="password"  id="passwordForm" class="form-control form-control-lg" placeholder="Enter password" />
                             <div class="p-1 mt-1" th:if="${#fields.hasErrors('password')}">
                                 <span class="invalid-feedback d-block mb-1" th:each="err : ${#fields.errors('password')}" th:text="${err}"></span>
                             </div>

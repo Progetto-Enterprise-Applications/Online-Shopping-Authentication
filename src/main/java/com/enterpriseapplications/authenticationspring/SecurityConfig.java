@@ -43,6 +43,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.time.Duration;
 import java.util.UUID;
 
 @Configuration
@@ -115,11 +116,11 @@ public class SecurityConfig {
                 .redirectUri("https://oauth.pstmn.io/v1/callback")
                 .redirectUri("http://localhost:4200")
                 .postLogoutRedirectUri("http://localhost:4200")
-                .tokenSettings(TokenSettings.builder().build())
                 .scope(OidcScopes.OPENID)
                 .tokenSettings(TokenSettings.builder()
-                        .reuseRefreshTokens(false
-                        ).build())
+                        .reuseRefreshTokens(false)
+                        .refreshTokenTimeToLive(Duration.ofDays(90))
+                        .accessTokenTimeToLive(Duration.ofMinutes(5)).build())
                 .clientSettings(ClientSettings.builder()
                         .requireAuthorizationConsent(true)
                         .requireProofKey(true)
@@ -134,11 +135,11 @@ public class SecurityConfig {
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .redirectUri("clowing://test.ac")
                 .postLogoutRedirectUri("clowing://test.ac")
-                .tokenSettings(TokenSettings.builder().build())
                 .scope(OidcScopes.OPENID)
                 .tokenSettings(TokenSettings.builder()
-                        .reuseRefreshTokens(false
-                        ).build())
+                        .reuseRefreshTokens(false)
+                        .refreshTokenTimeToLive(Duration.ofDays(90))
+                        .accessTokenTimeToLive(Duration.ofMinutes(5)).build())
                 .clientSettings(ClientSettings.builder()
                         .requireAuthorizationConsent(true)
                         .requireProofKey(true)
@@ -148,6 +149,7 @@ public class SecurityConfig {
 
         return new InMemoryRegisteredClientRepository(publicClient,mobileClient);
     }
+
 
     @Bean // <5>
     public JWKSource<SecurityContext> jwkSource() {
